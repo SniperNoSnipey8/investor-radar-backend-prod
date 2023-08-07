@@ -1,8 +1,8 @@
-import { sign } from "crypto";
-import e from "express";
-import express from "express";
+
+
+const express =require("express");
 const router = express.Router();
-import { supabase } from "../supabase";
+const  supabase  = require("../supabase")
 const Stripe = require("stripe");
 const stripe = Stripe(
   "sk_test_51LwKHOG08ae6WL7BmgYTJeUBTnzKSDCC6WOtO70SJTJJbpKVZbOtPwB5yDmqroYtpEqpbfias4DhYt9uIrQ4adYc007JnvUDpS"

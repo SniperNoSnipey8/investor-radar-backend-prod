@@ -4,9 +4,9 @@ const dotenv = require("dotenv");
 dotenv.config();
 const port = process.env.PORT || 6000;
 
-import router from "./Router/Data";
 
-import cors from "cors";
+
+const cors = require( "cors");
 
 
 import { webStripe, sessionId, createUser, manageUser } from "./Router/Data";
