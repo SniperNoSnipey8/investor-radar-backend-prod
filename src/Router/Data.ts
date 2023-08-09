@@ -4,6 +4,7 @@ const express =require("express");
 const router = express.Router();
 import { supabase } from "../supabase";
 const Stripe = require("stripe");
+
 const stripe = Stripe(
   process.env.STRIPE_SK_KEY
 );
@@ -20,7 +21,7 @@ export const createUser = router.post(
     // const cust = await stripe.customers.create({
     //   email: data.email_addresses[0].email_address,
     // });
-
+ 
     // console.log(cust);
     // console.log(data.id);
     // const { data: list, error } = await supabase.from("profiles").insert({

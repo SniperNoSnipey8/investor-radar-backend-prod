@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
     "esModuleInterop": true,
+    "strictNullChecks": false,
     "outDir": "./dist",
     "noPropertyAccessFromIndexSignature": false
   }
   , 
-  "include": ["src/index.ts", "src/*.d.ts"]
+  "include": ["src/index.ts", "src/*.d.ts", "env.d.ts"]
 }
