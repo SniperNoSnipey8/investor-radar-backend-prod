@@ -130,7 +130,7 @@ export const webStripe = router.post(
   
     var plan = "";
 
-    console.log(plan, limit);
+    
     switch (event.type) {
       case "customer.subscription.updated":
         switch (event.data.object.plan.id) {
