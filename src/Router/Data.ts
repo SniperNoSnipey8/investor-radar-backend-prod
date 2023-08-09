@@ -5,7 +5,7 @@ const router = express.Router();
 import { supabase } from "../supabase";
 const Stripe = require("stripe");
 const stripe = Stripe(
-  "sk_test_51LwKHOG08ae6WL7BmgYTJeUBTnzKSDCC6WOtO70SJTJJbpKVZbOtPwB5yDmqroYtpEqpbfias4DhYt9uIrQ4adYc007JnvUDpS"
+  process.env.STRIPE_SK_KEY
 );
 
 const bodyparser = require("body-parser");
@@ -16,7 +16,7 @@ export const createUser = router.post(
   bodyparser.json(),
   async (req: any, res: any) => {
     const data = req.body.data;
-    console.log(req.body);
+    
     // const cust = await stripe.customers.create({
     //   email: data.email_addresses[0].email_address,
     // });
@@ -41,9 +41,8 @@ export const createUser = router.post(
         const cust = await stripe.customers.create({
           email: data.email_addresses[0].email_address,
         });
-
-        console.log(cust);
-        console.log(data.id);
+        console.log(data)
+        
         const { data: list, error } = await supabase.from("profiles").insert({
           user_id: data.id,
           plan: "free",
@@ -54,6 +53,7 @@ export const createUser = router.post(
           export: 0,
         });
         res.sendStatus(200);
+        console.log(error)
         break;
       case "user.deleted":
         console.log("User Deleted");
@@ -73,7 +73,7 @@ export const manageUser = router.post(
     if(list){
       const session = await stripe.billingPortal.sessions.create({
         customer: list[0].stripe_id,
-        return_url: "http://localhost:5173/client/dashboard",
+        return_url: "https://app.investorradar.io/client/dashboard",
       });
       console.log(session);
       res.send(session);
@@ -96,8 +96,8 @@ export const sessionId = router.post(
         mode: "subscription",
         payment_method_types: ["card"],
         line_items: req.body.lineItems,
-        success_url: "http://localhost:5173/client/dashboard",
-        cancel_url: "http://localhost:5173/client/dashboard",
+        success_url: "https://app.investorradar.io/client/dashboard",
+        cancel_url: "https://app.investorradar.io/client/dashboard",
       });
       res.send(session.id);
     }
@@ -115,7 +115,7 @@ export const webStripe = router.post(
   async (req: any, res: any) => {
     const payload = req.body;
     const sig = req.headers["stripe-signature"];
-    const endpointsecret = "whsec_FoEnaAIHSsZiLaVS1966imoWAmmuT2G7";
+    const endpointsecret = process.env.STRIPE_SK_ENDPOINT;
     let event;
 
     try {
@@ -134,15 +134,15 @@ export const webStripe = router.post(
     switch (event.type) {
       case "customer.subscription.updated":
         switch (event.data.object.plan.id) {
-          case "price_1LwvtMG08ae6WL7BzTXJ2Exu":
+          case "price_1NcyVRG08ae6WL7BuzbqHtPr":
             plan = "pro";
 
             break;
-          case "price_1LwvsxG08ae6WL7BGQU7KuR1":
+          case "price_1NcyWbG08ae6WL7Biina43gq":
             plan = "prem";
 
             break;
-          case "price_1LwvsZG08ae6WL7BdeSYU68b":
+          case "price_1NcyW2G08ae6WL7BKEE9Sodc":
             plan = "start";
         }
         const { data: subData } = await supabase
