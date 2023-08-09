@@ -76,7 +76,7 @@ export const manageUser = router.post(
         customer: list[0].stripe_id,
         return_url: "https://app.investorradar.io/client/dashboard",
       });
-      console.log(session);
+      
       res.send(session);
     }
   
