@@ -10,7 +10,7 @@ const stripe = Stripe(
 );
 
 const bodyparser = require("body-parser");
-//router.use(express.raw())
+
 
 export const createUser = router.post(
   "/createUser",
