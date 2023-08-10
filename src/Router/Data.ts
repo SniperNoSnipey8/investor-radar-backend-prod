@@ -4,15 +4,17 @@ const express =require("express");
 const router = express.Router();
 import { supabase } from "../supabase";
 const Stripe = require("stripe");
+require('dotenv').config();
+const stripeKey = process.env.STRIPE_SK_KEY;
 
 const stripe = Stripe(
-  process.env.STRIPE_SK_KEY
+stripeKey 
 );
 
 const bodyparser = require("body-parser");
+//router.use(express.raw())
 
-
-export const createUser = router.post(
+export const createUser = router.post( 
   "/createUser",
   bodyparser.json(),
   async (req: any, res: any) => {
@@ -42,7 +44,7 @@ export const createUser = router.post(
         const cust = await stripe.customers.create({
           email: data.email_addresses[0].email_address,
         });
-        console.log(data)
+      
         
         const { data: list, error } = await supabase.from("profiles").insert({
           user_id: data.id,
