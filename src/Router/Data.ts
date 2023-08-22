@@ -122,7 +122,7 @@ export const webStripe = router.post(
     let event;
     //console.log(payload)
     try {
-      event = stripe.webhooks.constructEvent(req.rawBody, sig, "whsec_cSNWYd88B33DLa1XTre8ed9SqsvJUjEm");
+      event = stripe.webhooks.constructEvent(req.rawBody, sig, process.env.STRIPE_SK_ENDPOINT);
     } catch (error:any) {
       console.log(error);
       res.status(400).json({ success: false });
@@ -145,7 +145,7 @@ export const webStripe = router.post(
             plan = "prem";
 
             break;
-          case "price_1Ni1QjG08ae6WL7B7AVh5i8S":
+          case "price_1NcyW2G08ae6WL7BKEE9Sodc":
             plan = "start";
         }
         const { data: subData } = await supabase
