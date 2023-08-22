@@ -114,15 +114,15 @@ export const sessionId = router.post(
 
 export const webStripe = router.post(
   "/stripe-cust",
-  bodyparser.raw({ type: "application/json" }),
   async (req: any, res: any) => {
     const payload = req.body;
-    const sig = req.headers["stripe-signature"];
+    const sig = req.headers['stripe-signature'];
+    console.log(sig)
     const endpointsecret = process.env.STRIPE_SK_ENDPOINT;
     let event;
-
+    //console.log(payload)
     try {
-      event = stripe.webhooks.constructEvent(payload, sig, endpointsecret);
+      event = stripe.webhooks.constructEvent(req.rawBody, sig, "whsec_cSNWYd88B33DLa1XTre8ed9SqsvJUjEm");
     } catch (error:any) {
       console.log(error);
       res.status(400).json({ success: false });
@@ -133,7 +133,7 @@ export const webStripe = router.post(
   
     var plan = "";
 
-    
+    console.log(event)
     switch (event.type) {
       case "customer.subscription.updated":
         switch (event.data.object.plan.id) {
@@ -145,7 +145,7 @@ export const webStripe = router.post(
             plan = "prem";
 
             break;
-          case "price_1NcyW2G08ae6WL7BKEE9Sodc":
+          case "price_1Ni1QjG08ae6WL7B7AVh5i8S":
             plan = "start";
         }
         const { data: subData } = await supabase
