@@ -98,6 +98,7 @@ export const sessionId = router.post(
         customer: list[0].stripe_id,
         mode: "subscription",
         payment_method_types: ["card"],
+        allow_promotion_codes:true,
         line_items: req.body.lineItems,
         success_url: "https://app.investorradar.io/client/dashboard",
         cancel_url: "https://app.investorradar.io/client/dashboard",
