@@ -1,9 +1,9 @@
 const express = require("express");
 const app = express();
+
+import bodyParser from "body-parser";
 const dotenv = require("dotenv");
 dotenv.config();
-import bodyParser from "body-parser";
-require("dotenv").config();
 
 
 const cors = require( "cors");
@@ -12,14 +12,9 @@ const cors = require( "cors");
 import { webStripe, sessionId, createUser, manageUser } from "./Router/Data";
 console.log("listening");
 
-app.use('/stripe-cust', bodyParser.raw({type: "*/*"}))
+app.use(webStripe, bodyParser.raw({type: "*/*"}))
 app.use(cors());
-app.use(express.json({
-  limit: '5mb',
-  verify: (req, res, buf) => {
-    req.rawBody = buf.toString();
-  }
-}),webStripe);
+
 // app.use("/", webStripe);
 app.use("/", manageUser);
 app.use("/", sessionId, createUser);

@@ -3,10 +3,13 @@
 const express =require("express");
 const router = express.Router();
 import { supabase } from "../supabase";
-const Stripe = require("stripe");
-require('dotenv').config();
-const stripeKey = process.env.STRIPE_SK_KEY;
 
+const Stripe = require("stripe");
+
+const stripeKey = process.env.STRIPE_SK_KEY;
+const endpointsecret = process.env.STRIPE_SK_ENDPOINT;
+
+import {buffer} from "micro"
 const stripe = Stripe(
 stripeKey 
 );
@@ -115,26 +118,36 @@ export const sessionId = router.post(
 
 export const webStripe = router.post(
   "/stripe-cust",
+
   async (req: any, res: any) => {
-    const payload = req.body;
-    const sig = req.headers['stripe-signature'];
-    console.log(sig)
-    const endpointsecret = process.env.STRIPE_SK_ENDPOINT;
+   
+    
+    // const payload = JSON.parse(req.rawBody?.toString() || req.body);
+    
+   
+  
+   
+    // const endpointsecret = process.env.STRIPE_SK_ENDPOINT;
     let event;
     //console.log(payload)
     try {
-      event = stripe.webhooks.constructEvent(req.rawBody, sig, process.env.STRIPE_SK_ENDPOINT);
+      const requestBuffer = await buffer(req)
+      const signature = req.headers['stripe-signature'] as string;
+      event = stripe.webhooks.constructEvent(requestBuffer.toString(), signature,endpointsecret);
+      
     } catch (error:any) {
-      console.log(error);
+      // console.log(error);
+      console.log(error)
       res.status(400).json({ success: false });
       return;
     }
-    var limit = 0;
+   
 
   
     var plan = "";
 
-    console.log(event)
+    // console.log(event)
+    console.log(event.data.object.plan.id, event.data.object.customer)
     switch (event.type) {
       case "customer.subscription.updated":
         switch (event.data.object.plan.id) {
@@ -163,7 +176,7 @@ export const webStripe = router.post(
         break;
     }
 
-    res.json({
+    res.json({  
       success: true,
     });
   }
