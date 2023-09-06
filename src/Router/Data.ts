@@ -92,6 +92,7 @@ export const sessionId = router.post(
   "/getSession",
   bodyparser.json(),
   async (req: any, res: any) => {
+
     const { data: list, error } = await supabase
       .from("profiles")
       .select("stripe_id")
@@ -107,6 +108,7 @@ export const sessionId = router.post(
         cancel_url: "https://app.investorradar.io/client/dashboard",
       });
       res.send(session.id);
+      console.log(session.id)
     }
     
 

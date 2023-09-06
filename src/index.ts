@@ -7,13 +7,13 @@ dotenv.config();
 
 
 const cors = require( "cors");
-
+app.use(cors());
 
 import { webStripe, sessionId, createUser, manageUser } from "./Router/Data";
-console.log("listening");
+
 
 app.use(webStripe, bodyParser.raw({type: "*/*"}))
-app.use(cors());
+
 
 // app.use("/", webStripe);
 app.use("/", manageUser);
